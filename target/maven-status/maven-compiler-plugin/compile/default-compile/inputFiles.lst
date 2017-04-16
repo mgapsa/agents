@@ -1,1 +1,6 @@
-C:\Users\gapsa\workspace\agents\src\main\java\com\pw\sag\agents\App.java
+C:\Users\gapsa\workspace\agents\src\main\java\com\pw\sag\messages\MessageBuilder.java
+C:\Users\gapsa\workspace\agents\src\main\java\com\pw\sag\agents\sample\SampleAgent.java
+C:\Users\gapsa\workspace\agents\src\main\java\com\pw\sag\agents\sample\behaviors\IncrementBaseNumber.java
+C:\Users\gapsa\workspace\agents\src\main\java\com\pw\sag\messages\IntegerMessageContentReceiver.java
+C:\Users\gapsa\workspace\agents\src\main\java\com\pw\sag\messages\MessageReceiver.java
+C:\Users\gapsa\workspace\agents\src\main\java\com\pw\sag\tools\ContainerKiller.java
