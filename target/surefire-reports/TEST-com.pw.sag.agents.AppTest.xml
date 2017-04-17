@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="com.pw.sag.agents.AppTest" time="0.006" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="com.pw.sag.agents.AppTest" time="0.008" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.8.0_91\jre\bin"/>
@@ -27,7 +27,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 10"/>
-    <property name="classworlds.conf" value="C:\Users\gapsa\workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf1949908795958595755.tmp"/>
+    <property name="classworlds.conf" value="C:\Users\gapsa\workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf5877572869360771218.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1250"/>
     <property name="java.library.path" value="C:\Program Files\Java\jdk1.8.0_91\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_91/bin/server;C:/Program Files/Java/jre1.8.0_91/bin;C:/Program Files/Java/jre1.8.0_91/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Java\jdk1.8.0_91\bin;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 &amp; MySQL Utilities 1.5\;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 &amp; MySQL Utilities 1.5\Doctrine extensions for PHP\;C:\Program Files\Git\cmd;C:\Users\gapsa\Anaconda2;C:\Users\gapsa\Anaconda2\Scripts;C:\Octave\Octave-4.2.1;C:\opencv\build\x64\vc12\bin;C:\apache-maven-3.5.0\bin;C:\Users\gapsa\Anaconda2;C:\Users\gapsa\Anaconda2\Scripts;C:\Users\gapsa\Anaconda2\Library\bin;C:\Users\gapsa\AppData\Local\Microsoft\WindowsApps;;C:\Users\gapsa\Documents\eclipse;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -61,5 +61,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.pw.sag.agents.AppTest" name="testApp" time="0.006"/>
+  <testcase classname="com.pw.sag.agents.AppTest" name="testApp" time="0.008"/>
 </testsuite>
