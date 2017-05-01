@@ -48,6 +48,7 @@
             </plugins>
           </build>
         </profile>
+        
         <profile>
           <id>jade-agent</id>
           <build>
@@ -61,6 +62,26 @@
                   <arguments>
                     <argument>-conf</argument>
                     <argument>src/main/resources/jade-agent-container.properties</argument>
+                  </arguments>
+                </configuration>
+              </plugin>
+            </plugins>
+          </build>
+        </profile>
+        
+         <profile>
+          <id>jade-board</id>
+          <build>
+            <plugins>
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                  <mainClass>jade.Boot</mainClass>
+                  <arguments>
+                    <argument>-conf</argument>
+                    <argument>src/main/resources/jade-board-container.properties</argument>
                   </arguments>
                 </configuration>
               </plugin>
