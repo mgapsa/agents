@@ -41,13 +41,15 @@ public class RespondToCar extends Behaviour {
     }
 
     private void continueResponding() {
-        listen(agent, this).forInteger((toIncrement) -> {
-            logger.info("Recieved " + toIncrement);
-            toIncrement++;
-            agent.send(inform().toLocal("car-agent-1").withContent(toIncrement).build());
-            if (toIncrement > MAX_INCREMENT) {
-                state = State.STOP_RESPONDING;
-            }
+        listen(agent, this).forString((information) -> {
+            logger.info("Recieved " + information);
+            String[] parts = information.split(";");
+            int x = Integer.parseInt(parts[1]);
+            int y = Integer.parseInt(parts[2]);
+            if(x==5)
+            	agent.send(inform().toLocal(parts[0]).withContent(20).build());
+            else
+            	agent.send(inform().toLocal(parts[0]).withContent(9).build());
         });
     }
 

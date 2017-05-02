@@ -1,5 +1,6 @@
 package com.pw.sag.agents.car.behaviors;
 
+import com.pw.sag.agents.car.CarAgent;
 import com.pw.sag.tools.ContainerKiller;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -20,15 +21,14 @@ public class AskBoard extends Behaviour {
     private final Agent agent;
     private final String boardName;
     private State state;
-    private int x;
-    private int y;
+    private String agentName;
 
     public AskBoard(Agent agent, String boardName) {
         this.agent = agent;
         this.boardName = boardName;
         this.state = State.START_MOVING;
-        x = 5;
-        y = 5;
+        String[] parts = agent.getName().split("@");
+        agentName = parts[0];
     }
 
     @Override
@@ -47,8 +47,10 @@ public class AskBoard extends Behaviour {
         }
     }
 
+    //nie wiem czy dobrze ze rzutuje na CarAgent, jak zle to implementacje x,y przeniesc tutaj i po sprawie
     private void startAsking() {
-        agent.send(inform().toLocal(boardName).withContent(1).build());
+    	CarAgent car = (CarAgent) agent;
+        agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
         state = State.CONTINUE_MOVING;
     }
 
@@ -56,8 +58,10 @@ public class AskBoard extends Behaviour {
     private void continueAsking() {
         listen(agent, this).forInteger((toIncrement) -> {
             logger.info("Recieved " + toIncrement);
+            CarAgent car = (CarAgent) agent;
+            car.moved(true);
             toIncrement++;
-            agent.send(inform().toLocal(boardName).withContent(toIncrement).build());
+            agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
             if (toIncrement > MAX_INCREMENT) {
                 state = State.STOP_MOVING;
             }

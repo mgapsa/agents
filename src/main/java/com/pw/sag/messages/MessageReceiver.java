@@ -28,5 +28,14 @@ public class MessageReceiver {
             behavior.block();
         }
     }
+    
+    public void forString(StringMessageContentReceiver contentReceiver) {
+    	ACLMessage message = agent.receive();
+        if (message != null) {
+            contentReceiver.onMessage(message.getContent());
+        } else {
+            behavior.block();
+        }
+    }
 }
 
