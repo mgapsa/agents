@@ -25,6 +25,7 @@ public class CarAgent extends Agent {
         
         currentX = 0;
         currentY = 0;
+        prepareNextPosition();
         //CHYBA dobra strona do ogarniecia podstaw JADE i agentów
         //http://ideaheap.com/2015/05/jade-setup-for-beginners/
         //mvn -Pjade-main exec:java

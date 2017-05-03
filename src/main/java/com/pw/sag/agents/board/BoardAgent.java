@@ -9,6 +9,24 @@ import jade.core.Agent;
 
 public class BoardAgent extends Agent {
     private static final Logger logger = LoggerFactory.getLogger(BoardAgent.class);
+    
+    //jedynmka to sciana
+    //TODO:
+    //Wy: komunikajca miedzy carami, jak ma board dokladnie zwraca wiadomosc do auta i kiedy wysylac do boardu o zmiane
+    //jakies pomysly mam
+    //ja -> napisac metdoe w gui ktora pozwoli zmieniac pozycje samochodow graficznie no i ogolnie wysweitlanie zrobic bo to dummy teraz jest
+    private int[][] board = new int[][]{
+    	  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    	  { 1, 1, 0, 0, 0, 0, 0, 0, 0, 1 },
+    	  { 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 },
+    	  { 1, 0, 0, 1, 1, 1, 0, 0, 0, 1 },
+    	  { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
+    	  { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
+    	  { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
+    	  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+    	  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+    	  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+    	};
  
     @Override
     public void setup() {
@@ -18,6 +36,16 @@ public class BoardAgent extends Agent {
         //http://ideaheap.com/2015/05/jade-setup-for-beginners/
         //mvn -Pjade-main exec:java
         //mvn -Pjade-agent exec:java
+    }
+    
+    public int[][] getBoard()
+    {
+    	return board;
+    }
+    
+    public boolean canMove(int x, int y)
+    {
+    	return true;
     }
  
     @Override
