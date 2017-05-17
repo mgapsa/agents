@@ -1,6 +1,7 @@
 package com.pw.sag.agents.car.behaviors;
 
 import com.pw.sag.agents.car.CarAgent;
+import com.pw.sag.messages.Messages;
 import com.pw.sag.tools.ContainerKiller;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -48,29 +49,51 @@ public class AskBoard extends Behaviour {
     }
 
     //nie wiem czy dobrze ze rzutuje na CarAgent, jak zle to implementacje x,y przeniesc tutaj i po sprawie
+    //bo narazie x i y są w klasie car, dlatego rzutuje. 
+    //Tutaj zaczynamy pytac, na razie pytam tylko Board, bo tym sie zajmowałem. Wysyłam nazwe samochodu, zeby board mogl
+    //odpowiedziec i odpowiednie auto ustawic na boardzie oraz poloenie do jakiego chce isc
     private void startAsking() {
     	CarAgent car = (CarAgent) agent;
         agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
         state = State.CONTINUE_MOVING;
     }
 
-    //zamiast integra wsyylac stringa nazwaagetna;x;y; czyli gdzie cche sie udac. Jak zmieni pozycje to zwroci stringa true albo false
+    //to samo co wyzej tylko najpeir czeka na odpowiedz. Stwierdzilem ze tutaj bedzie dostawal odpowiedzi od wszystkich wiec
+    //w stringu ktory dostaje niech bedzie info czy ta odpowiedz jest od auta czy od boardu
     private void continueAsking() {
-        listen(agent, this).forInteger((toIncrement) -> {
-            logger.info("Recieved " + toIncrement);
+        listen(agent, this).forString((information) -> {
+            logger.info("Recieved " + information);
             CarAgent car = (CarAgent) agent;
-            car.moved(true);
-            toIncrement++;
-            agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
-            if (toIncrement > MAX_INCREMENT) {
-                state = State.STOP_MOVING;
-            }
+            
+            String[] parts = information.split(";");
+            if(parts[0].equals(Messages.FROM_BOARD))
+            {
+            	//logger.info("OK " + parts[1]);
+            	switch(parts[1])
+            	{
+            		case Messages.MOVE_OK:
+            			car.moved(true);
+            			agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+            			break;
+            		case Messages.OBSTACLE_MET:
+            			car.moved(false);
+            			agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+            			break;
+            		case Messages.FINISH:
+            			state = State.STOP_MOVING;
+            			break;
+        			default:
+        				break;            		
+            	}
+            	
+            }            
         });
     }
 
+    // to sie teraz nie odpala BO on tu nasluchuje, nic nie dostaje wiec nie niszczy i reszta sie moze dokrecic
     private void stopAsking() {
-        listen(agent, this).forInteger((toIgnore) -> {
-            logger.info("I'm just going to ignore this: " + toIgnore);
+        listen(agent, this).forString((information) -> {
+            logger.info("I'm just going to ignore this: " + information);
             ContainerKiller.killContainerOf(agent);
         });
     }

@@ -29,7 +29,7 @@ public class CarAgent extends Agent {
         //CHYBA dobra strona do ogarniecia podstaw JADE i agentów
         //http://ideaheap.com/2015/05/jade-setup-for-beginners/
         //mvn -Pjade-main exec:java
-        //mvn -Pjade-agent exec:java
+        //mvn -Pjade-board exec:java
     }
     
     public int getCurrentX()

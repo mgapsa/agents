@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
  
 import static com.pw.sag.messages.MessageBuilder.inform;
 import static com.pw.sag.messages.MessageReceiver.listen;
+import com.pw.sag.messages.Messages;
 
 //tutaj rowniez odwoluje sie do BoardAgent wiedziec ze tylko to z tego korzysta!
 //jak to zla koncepcja, to mozna zmienic ze tutaj jest plansza a nie w BoardAgent
@@ -31,7 +32,7 @@ public class RespondToCar extends Behaviour {
         this.state = State.CONTINUE_RESPONDING;
         BoardAgent boardAgent = (BoardAgent) agent;
         
-        gui = new BoardGUI(boardAgent.getBoard());
+        gui = new BoardGUI(boardAgent);
     }
 
     @Override
@@ -57,9 +58,9 @@ public class RespondToCar extends Behaviour {
             int y = Integer.parseInt(parts[2]);
             //ten if to czy moze ruszyc, jesli tak to juz wysweitlac?
             if(x==5)
-            	agent.send(inform().toLocal(parts[0]).withContent(20).build());
+            	agent.send(inform().toLocal(parts[0]).withContent(Messages.FROM_BOARD + ";" + Messages.FINISH+ ";").build());
             else
-            	agent.send(inform().toLocal(parts[0]).withContent(9).build());
+            	agent.send(inform().toLocal(parts[0]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_OK+ ";").build());
         });
     }
 

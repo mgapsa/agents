@@ -12,8 +12,6 @@ public class BoardAgent extends Agent {
     
     //jedynmka to sciana
     //TODO:
-    //Wy: komunikajca miedzy carami, jak ma board dokladnie zwraca wiadomosc do auta i kiedy wysylac do boardu o zmiane
-    //jakies pomysly mam
     //ja -> napisac metdoe w gui ktora pozwoli zmieniac pozycje samochodow graficznie no i ogolnie wysweitlanie zrobic bo to dummy teraz jest
     private int[][] board = new int[][]{
     	  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -45,7 +43,7 @@ public class BoardAgent extends Agent {
     
     public boolean canMove(int x, int y)
     {
-    	return true;
+    	return(board[x][y] == 0);
     }
  
     @Override
