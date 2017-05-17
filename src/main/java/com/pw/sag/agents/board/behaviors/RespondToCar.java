@@ -25,7 +25,6 @@ public class RespondToCar extends Behaviour {
     private final Agent agent;
     private State state;
     private BoardGUI gui;
-    //jakas plansza by sie przydała, array
 
     public RespondToCar(Agent agent) {
         this.agent = agent;
@@ -57,10 +56,14 @@ public class RespondToCar extends Behaviour {
             int x = Integer.parseInt(parts[1]);
             int y = Integer.parseInt(parts[2]);
             //ten if to czy moze ruszyc, jesli tak to juz wysweitlac?
-            if(x==5)
-            	agent.send(inform().toLocal(parts[0]).withContent(Messages.FROM_BOARD + ";" + Messages.FINISH+ ";").build());
+            BoardAgent boardAgent = (BoardAgent) agent;
+            if(boardAgent.getBoard()[x][y]==1)
+            	agent.send(inform().toLocal(parts[0]).withContent(Messages.FROM_BOARD + ";" + Messages.OBSTACLE_MET+ ";").build());
             else
+            {
             	agent.send(inform().toLocal(parts[0]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_OK+ ";").build());
+            	gui.displayCar(parts[0], x, y);
+            }
         });
     }
 

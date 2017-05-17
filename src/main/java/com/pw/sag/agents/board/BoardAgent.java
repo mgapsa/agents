@@ -2,6 +2,7 @@ package com.pw.sag.agents.board;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.pw.sag.agents.board.behaviors.RespondToCar;
 
@@ -10,22 +11,8 @@ import jade.core.Agent;
 public class BoardAgent extends Agent {
     private static final Logger logger = LoggerFactory.getLogger(BoardAgent.class);
     
-    //jedynmka to sciana
-    //TODO:
-    //ja -> napisac metdoe w gui ktora pozwoli zmieniac pozycje samochodow graficznie no i ogolnie wysweitlanie zrobic bo to dummy teraz jest
-//    private int[][] board = new int[][]{
-//    	  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-//    	  { 1, 1, 0, 0, 0, 0, 0, 0, 0, 1 },
-//    	  { 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 },
-//    	  { 1, 0, 0, 1, 1, 1, 0, 0, 0, 1 },
-//    	  { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
-//    	  { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
-//    	  { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
-//    	  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-//    	  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-//    	  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-//    	};
-    private int x,y;
+    //x,y dimensions, z nr of obstacles
+    private int x,y,z;
     private int[][] board;
  
     @Override
@@ -33,6 +20,7 @@ public class BoardAgent extends Agent {
     	//rozmiar wejsiowy, wygenerowac board
     	this.x = Integer.parseInt((String) this.getArguments()[0]); 
     	this.y = Integer.parseInt((String) this.getArguments()[1]);
+    	this.z = Integer.parseInt((String) this.getArguments()[2]);
     	createBoard();
     	
         addBehaviour(new RespondToCar(this));
@@ -59,6 +47,14 @@ public class BoardAgent extends Agent {
     				board[i][j] = 0;
     			}
     		}
+    	}
+    	
+    	//create obstacles
+    	for(int i =0; i< z; i++)
+    	{
+    		int m = ThreadLocalRandom.current().nextInt(1, x-1);
+    		int n = ThreadLocalRandom.current().nextInt(1, y-1);
+    		board[m][n] = 1;
     	}
     	
     }

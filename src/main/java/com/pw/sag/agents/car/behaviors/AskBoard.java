@@ -64,6 +64,12 @@ public class AskBoard extends Behaviour {
         listen(agent, this).forString((information) -> {
             logger.info("Recieved " + information);
             CarAgent car = (CarAgent) agent;
+            try {
+				Thread.sleep(5000);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             
             String[] parts = information.split(";");
             if(parts[0].equals(Messages.FROM_BOARD))

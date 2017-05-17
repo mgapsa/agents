@@ -69,8 +69,8 @@ public class CarAgent extends Agent {
     private void prepareNextPosition()
     {
     	Random generator = new Random();
-    	nextX = generator.nextInt(10);
-    	nextY = generator.nextInt(10);
+    	nextX = generator.nextInt(100);
+    	nextY = generator.nextInt(200);
     }
  
     @Override

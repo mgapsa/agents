@@ -13,12 +13,15 @@ import java.awt.GridBagLayoutInfo;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.pw.sag.agents.board.BoardAgent;
+import com.pw.sag.utilities.Point;
 
 
 public class BoardGUI {
@@ -28,6 +31,8 @@ public class BoardGUI {
 	private JPanel panel = new JPanel();
 	private BoardAgent boardAgent;
 	JPanel[][] panelHolder;
+	
+	private Map<String, Point> map = new HashMap<String, Point>();
 	//jakas lista z pozycjami i aktorami
 	//metody do wyswietlnia
 	
@@ -36,7 +41,7 @@ public class BoardGUI {
 		guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Example GUI");
-		guiFrame.setSize(boardAgent.getX()*multiplier, boardAgent.getY()*multiplier);
+		guiFrame.setSize(boardAgent.getY()*multiplier, boardAgent.getX()*multiplier);
 		this.boardAgent = boardAgent;
 		
 		panelHolder = new JPanel[boardAgent.getX()][boardAgent.getY()];
@@ -64,9 +69,22 @@ public class BoardGUI {
 		guiFrame.setVisible(true);
 	}
 	
-	public void diplayObstacles()
+	public void displayCar(String name, int x, int y)
 	{
+		Point p = new Point(0,0);
+		if(map.containsKey(name))
+		{
+			p = map.get(name);
+			panelHolder[p.getX()][p.getY()].setBackground(Color.WHITE);
+		}
+		else
+		{
+			map.put(name, p);
+		}
+		p.setX(x);
+		p.setY(y);
 		
+		panelHolder[x][y].setBackground(Color.BLACK);
 	}
 	//tutaj jakas metoda do otrzymywania nazwy actora i jego nowej pozycji od boardu
 	//musi miec jakąś liste ktory gent to jaki leement zeby usuwac w starym miejscu i rysowac w nowym
