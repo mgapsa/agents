@@ -49,7 +49,7 @@ public class RespondToCar extends Behaviour {
         }
     }
 
-    //Zwracac jakie true, falsy, ale to do ustalenia. Zając sie GUI
+    //Sprawdzac obstacles, CEL? Zając sie GUI
     private void continueResponding() {
         listen(agent, this).forString((information) -> {
             logger.info("Recieved " + information);

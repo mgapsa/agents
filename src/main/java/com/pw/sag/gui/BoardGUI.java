@@ -8,6 +8,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridBagLayoutInfo;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -18,8 +22,12 @@ import com.pw.sag.agents.board.BoardAgent;
 
 
 public class BoardGUI {
+	private int multiplier = 8;
 	private JFrame guiFrame;
 	private static final Logger logger = LoggerFactory.getLogger(BoardGUI.class);
+	private JPanel panel = new JPanel();
+	private BoardAgent boardAgent;
+	JPanel[][] panelHolder;
 	//jakas lista z pozycjami i aktorami
 	//metody do wyswietlnia
 	
@@ -28,7 +36,31 @@ public class BoardGUI {
 		guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Example GUI");
-		guiFrame.setSize(1000,1000);
+		guiFrame.setSize(boardAgent.getX()*multiplier, boardAgent.getY()*multiplier);
+		this.boardAgent = boardAgent;
+		
+		panelHolder = new JPanel[boardAgent.getX()][boardAgent.getY()];
+		panel.setLayout(new GridLayout(boardAgent.getX(),boardAgent.getY(),1,1));
+		
+		
+		int[][] board = boardAgent.getBoard();
+		//narysowac przeszkody
+		for(int i =0; i<boardAgent.getX(); i++)
+        {
+            for(int j = 0; j < boardAgent.getY(); j++)
+            {
+            	panelHolder[i][j] = new JPanel();
+            	panel.add(panelHolder[i][j]);
+                if(board[i][j] == 1)
+                {
+                	panelHolder[i][j].setBackground(Color.RED);
+                }
+            }
+        }
+		
+		guiFrame.add(panel, BorderLayout.CENTER);
+		
+		
 		guiFrame.setVisible(true);
 	}
 	
