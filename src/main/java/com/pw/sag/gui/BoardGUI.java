@@ -46,7 +46,7 @@ public class BoardGUI {
 		
 		panelHolder = new JPanel[boardAgent.getX()][boardAgent.getY()];
 		panel.setLayout(new GridLayout(boardAgent.getX(),boardAgent.getY(),1,1));
-		
+		panel.setBackground(Color.WHITE);
 		
 		int[][] board = boardAgent.getBoard();
 		//narysowac przeszkody
@@ -59,6 +59,10 @@ public class BoardGUI {
                 if(board[i][j] == 1)
                 {
                 	panelHolder[i][j].setBackground(Color.RED);
+                }
+                else
+                {
+                	panelHolder[i][j].setBackground(Color.WHITE);
                 }
             }
         }

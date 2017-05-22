@@ -65,7 +65,7 @@ public class AskBoard extends Behaviour {
             logger.info("Recieved " + information);
             CarAgent car = (CarAgent) agent;
             try {
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
