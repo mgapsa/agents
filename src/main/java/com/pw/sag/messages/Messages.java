@@ -12,4 +12,8 @@ public class Messages{
 	public static final String FROM_BOARD = "From board";
 	public static final String ASK_AOBUT_NEIGHBOURHOOD = "Neighbourhood question";
 	public static final String MOVE_ORDER = "Move order";
+	public static final String SOUTH = "South";
+	public static final String NORTH = "North";
+	public static final String WEST = "West";
+	public static final String EAST = "East";
 }

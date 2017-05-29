@@ -52,21 +52,25 @@ public class RespondToCar extends Behaviour {
     private void continueResponding() {
         listen(agent, this).forString((information) -> {
             logger.info("Recieved " + information);
+            //common variables
             String[] parts = information.split(";");
+            int x = Integer.parseInt(parts[2]);
+            int y = Integer.parseInt(parts[3]);
+            BoardAgent boardAgent = (BoardAgent) agent;
+            
             switch(parts[0])
             {
             case Messages.ASK_AOBUT_NEIGHBOURHOOD:
+            	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + boardAgent.getBoard()[x-1][y] + ";" + boardAgent.getBoard()[x][y+1] + ";" + boardAgent.getBoard()[x+1][y] + ";"+ boardAgent.getBoard()[x][y-1] + ";").build());
             	break;
             case Messages.MOVE_ORDER:
-            	int x = Integer.parseInt(parts[2]);
-                int y = Integer.parseInt(parts[3]);
-                //ten if to czy moze ruszyc, jesli tak to juz wysweitlac?
-                BoardAgent boardAgent = (BoardAgent) agent;
+                //ten to ylko upewnienie ze nie wjedzie na przeszkode
                 if(boardAgent.getBoard()[x][y]==1)
-                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.OBSTACLE_MET+ ";").build());
+                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.OBSTACLE_MET + ";").build());
                 else
                 {
-                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK+ ";").build());
+                	int reward = boardAgent.getX() + boardAgent.getY() - x - y;
+                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK + ";" + reward + ";").build());
                 	gui.displayCar(parts[1], x, y);
                 }
             	break;

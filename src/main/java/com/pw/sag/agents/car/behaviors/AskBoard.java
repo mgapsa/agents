@@ -48,20 +48,13 @@ public class AskBoard extends Behaviour {
         }
     }
 
-    //nie wiem czy dobrze ze rzutuje na CarAgent, jak zle to implementacje x,y przeniesc tutaj i po sprawie
-    //bo narazie x i y są w klasie car, dlatego rzutuje. 
-    //Tutaj zaczynamy pytac, na razie pytam tylko Board, bo tym sie zajmowałem. Wysyłam nazwe samochodu, zeby board mogl
-    //odpowiedziec i odpowiednie auto ustawic na boardzie oraz poloenie do jakiego chce isc
-    //NOWY KOMENT: pierwsze pytanie do boardu idzie o sąsiedztwo., założyłem że najpier ma kierunek w góre!!!!
     private void startAsking() {
     	CarAgent car = (CarAgent) agent;
-        //agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
-    	agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
+        agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
+    	//agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
         state = State.CONTINUE_MOVING;
     }
 
-    //to samo co wyzej tylko najpeir czeka na odpowiedz. Stwierdzilem ze tutaj bedzie dostawal odpowiedzi od wszystkich wiec
-    //w stringu ktory dostaje niech bedzie info czy ta odpowiedz jest od auta czy od boardu
     private void continueAsking() {
         listen(agent, this).forString((information) -> {
             logger.info("Recieved " + information);
@@ -82,13 +75,20 @@ public class AskBoard extends Behaviour {
                 switch(parts[1])
                 {
                 case Messages.MOVE_ORDER:
+                	//tutaj co robicie gdy dostaniecie odpowedz od planszy o ruchu
                 	switch(parts[2])
                 	{
                 		case Messages.MOVE_OK:
-                			car.moved(true);
-                			agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+                			//to ponizej wywaliłem BO teraz to jak sie ruszy nie jest randomowe a zalezy od sąsiedztwa i od tablicy
+                			//wiec to poszlo tam gdzie mamy odpiwiedz od sasiedztwa
+                			//car.moved(true);
+                			//ruch się udał, wiec mamy nagrode
+                			//idzie pytanie o sąsiedztwo do planszy
+                			int reward = Integer.parseInt(parts[3]);
+                			agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 			break;
                 		case Messages.OBSTACLE_MET:
+                			//ten przypadek juz nie wsytąpi teraz, jak zrobicie algorytm poruszania
                 			car.moved(false);
                 			agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 			break;
@@ -100,6 +100,16 @@ public class AskBoard extends Behaviour {
                 	}
                 	break;
                 case Messages.ASK_AOBUT_NEIGHBOURHOOD:
+                	//tutaj co robicie gdy dostaniecie odpowiedz o sasiedztwie
+                	//0 to normalne pole, 1 to przeszkoda
+                	int north = Integer.parseInt(parts[2]);
+                	int east = Integer.parseInt(parts[3]);
+                	int south = Integer.parseInt(parts[4]);
+                	int west = Integer.parseInt(parts[5]);
+                	//jakies przetwarzanie i na koniec idzie pytanie o ruch do samochodu. 
+                	//YOURCODE HERE xD
+                	car.moved(true);
+                	agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 	break;
                 	
                 }         	

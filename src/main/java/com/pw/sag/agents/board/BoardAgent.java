@@ -29,6 +29,7 @@ public class BoardAgent extends Agent {
         //http://ideaheap.com/2015/05/jade-setup-for-beginners/
         //mvn -Pjade-main exec:java
         //mvn -Pjade-board exec:java
+        //mvn -Pjade-board-tst exec:java
     }
     
     private void createBoard()
