@@ -53,16 +53,23 @@ public class RespondToCar extends Behaviour {
         listen(agent, this).forString((information) -> {
             logger.info("Recieved " + information);
             String[] parts = information.split(";");
-            int x = Integer.parseInt(parts[1]);
-            int y = Integer.parseInt(parts[2]);
-            //ten if to czy moze ruszyc, jesli tak to juz wysweitlac?
-            BoardAgent boardAgent = (BoardAgent) agent;
-            if(boardAgent.getBoard()[x][y]==1)
-            	agent.send(inform().toLocal(parts[0]).withContent(Messages.FROM_BOARD + ";" + Messages.OBSTACLE_MET+ ";").build());
-            else
+            switch(parts[0])
             {
-            	agent.send(inform().toLocal(parts[0]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_OK+ ";").build());
-            	gui.displayCar(parts[0], x, y);
+            case Messages.ASK_AOBUT_NEIGHBOURHOOD:
+            	break;
+            case Messages.MOVE_ORDER:
+            	int x = Integer.parseInt(parts[2]);
+                int y = Integer.parseInt(parts[3]);
+                //ten if to czy moze ruszyc, jesli tak to juz wysweitlac?
+                BoardAgent boardAgent = (BoardAgent) agent;
+                if(boardAgent.getBoard()[x][y]==1)
+                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.OBSTACLE_MET+ ";").build());
+                else
+                {
+                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK+ ";").build());
+                	gui.displayCar(parts[1], x, y);
+                }
+            	break;
             }
         });
     }

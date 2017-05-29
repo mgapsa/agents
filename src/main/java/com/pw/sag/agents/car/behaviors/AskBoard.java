@@ -52,9 +52,11 @@ public class AskBoard extends Behaviour {
     //bo narazie x i y są w klasie car, dlatego rzutuje. 
     //Tutaj zaczynamy pytac, na razie pytam tylko Board, bo tym sie zajmowałem. Wysyłam nazwe samochodu, zeby board mogl
     //odpowiedziec i odpowiednie auto ustawic na boardzie oraz poloenie do jakiego chce isc
+    //NOWY KOMENT: pierwsze pytanie do boardu idzie o sąsiedztwo., założyłem że najpier ma kierunek w góre!!!!
     private void startAsking() {
     	CarAgent car = (CarAgent) agent;
-        agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
+        //agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
+    	agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";").build());
         state = State.CONTINUE_MOVING;
     }
 
@@ -72,26 +74,35 @@ public class AskBoard extends Behaviour {
 			}
             
             String[] parts = information.split(";");
+            
+           
             if(parts[0].equals(Messages.FROM_BOARD))
             {
             	//logger.info("OK " + parts[1]);
-            	switch(parts[1])
-            	{
-            		case Messages.MOVE_OK:
-            			car.moved(true);
-            			agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
-            			break;
-            		case Messages.OBSTACLE_MET:
-            			car.moved(false);
-            			agent.send(inform().toLocal(boardName).withContent(agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
-            			break;
-            		case Messages.FINISH:
-            			state = State.STOP_MOVING;
-            			break;
-        			default:
-        				break;            		
-            	}
-            	
+                switch(parts[1])
+                {
+                case Messages.MOVE_ORDER:
+                	switch(parts[2])
+                	{
+                		case Messages.MOVE_OK:
+                			car.moved(true);
+                			agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+                			break;
+                		case Messages.OBSTACLE_MET:
+                			car.moved(false);
+                			agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+                			break;
+                		case Messages.FINISH:
+                			state = State.STOP_MOVING;
+                			break;
+            			default:
+            				break;            		
+                	}
+                	break;
+                case Messages.ASK_AOBUT_NEIGHBOURHOOD:
+                	break;
+                	
+                }         	
             }            
         });
     }

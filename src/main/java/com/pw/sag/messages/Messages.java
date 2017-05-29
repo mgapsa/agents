@@ -6,8 +6,10 @@ package com.pw.sag.messages;
 //}
 
 public class Messages{
-	public static final String OBSTACLE_MET = "Move not possible, obstacle met";
+	public static final String OBSTACLE_MET = "Obstacle";
 	public static final String MOVE_OK = "Move accepted";
 	public static final String FINISH = "You got safely to the end";
-	public static final String FROM_BOARD = "This message was sent from board";
+	public static final String FROM_BOARD = "From board";
+	public static final String ASK_AOBUT_NEIGHBOURHOOD = "Neighbourhood question";
+	public static final String MOVE_ORDER = "Move order";
 }
