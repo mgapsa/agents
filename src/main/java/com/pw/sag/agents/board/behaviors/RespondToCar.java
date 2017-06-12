@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
  
 import static com.pw.sag.messages.MessageBuilder.inform;
 import static com.pw.sag.messages.MessageReceiver.listen;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.pw.sag.messages.Messages;
 
 //tutaj rowniez odwoluje sie do BoardAgent wiedziec ze tylko to z tego korzysta!
@@ -25,11 +29,13 @@ public class RespondToCar extends Behaviour {
     private final Agent agent;
     private State state;
     private BoardGUI gui;
+    private List<String> carsNames;
 
     public RespondToCar(Agent agent) {
         this.agent = agent;
         this.state = State.CONTINUE_RESPONDING;
         BoardAgent boardAgent = (BoardAgent) agent;
+        carsNames = new ArrayList<String>();
         
         gui = new BoardGUI(boardAgent);
     }
@@ -57,7 +63,10 @@ public class RespondToCar extends Behaviour {
             int x = Integer.parseInt(parts[2]);
             int y = Integer.parseInt(parts[3]);
             BoardAgent boardAgent = (BoardAgent) agent;
-            
+            if (!carsNames.contains(parts[1]))
+            {
+            	carsNames.add(parts[1]);
+            }
             switch(parts[0])
             {
             case Messages.ASK_AOBUT_NEIGHBOURHOOD:
@@ -65,14 +74,22 @@ public class RespondToCar extends Behaviour {
             	break;
             case Messages.MOVE_ORDER:
                 //ten to ylko upewnienie ze nie wjedzie na przeszkode
-                if(boardAgent.getBoard()[x][y]==1)
-                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.OBSTACLE_MET + ";").build());
-                else
+//                if(boardAgent.getBoard()[x][y]==1)
+//                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.OBSTACLE_MET).build());
+//                else
                 {
                 	int reward = boardAgent.getX() + boardAgent.getY() - x - y;
-                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK + ";" + reward + ";").build());
+                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK + ";" + reward).build());
                 	gui.displayCar(parts[1], x, y);
                 }
+            	break;
+            case Messages.ASK_FOR_ALL_CARS:
+            	String messageText = Integer.toString(carsNames.size());
+            	for (int i = 0; i < carsNames.size(); i++) 
+            	{
+            		messageText += (";" + carsNames.get(i));
+            	}
+            	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.ASK_FOR_ALL_CARS + ";" + messageText).build());
             	break;
             }
         });
