@@ -14,6 +14,7 @@ public class BoardAgent extends Agent {
     //x,y dimensions, z nr of obstacles
     private int x,y,z;
     private int[][] board;
+	private float[][] weights;
  
     @Override
     public void setup() {
@@ -34,7 +35,9 @@ public class BoardAgent extends Agent {
     
     private void createBoard()
     {
+    	float step = x-2+y-2; //najdluzsza droga na planszy
     	board = new int[x][y];
+    	weights = new float[x][y]; //tablica wag planszy
     	for(int i = 0; i < x; i++)
     	{
     		for(int j = 0; j < y; j++)
@@ -46,10 +49,12 @@ public class BoardAgent extends Agent {
     			else
     			{
     				board[i][j] = 0;
+    				weights[i][j] =1 - (i-1+j-1)/step;
     			}
+
     		}
     	}
-    	
+    	weights[1][1]= 2;
     	//create obstacles
     	for(int i =0; i< z; i++)
     	{
@@ -64,8 +69,12 @@ public class BoardAgent extends Agent {
     {
     	return board;
     }
-    
-    public boolean canMove(int x, int y)
+
+	public float[][] getWeights() {
+		return weights;
+	}
+
+	public boolean canMove(int x, int y)
     {
     	return(board[x][y] == 0);
     }

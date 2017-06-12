@@ -78,7 +78,7 @@ public class RespondToCar extends Behaviour {
 //                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.OBSTACLE_MET).build());
 //                else
                 {
-                	int reward = boardAgent.getX() + boardAgent.getY() - x - y;
+                	float reward = boardAgent.getWeights()[x][y];
                 	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK + ";" + reward).build());
                 	gui.displayCar(parts[1], x, y);
                 }
