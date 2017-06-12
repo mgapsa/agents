@@ -93,11 +93,11 @@ public class CarAgent extends Agent {
     	{
     		currentX = nextX;
     		currentY = nextY;
-    		prepareNextPosition(false);
+    		//prepareNextPosition(false);
     	}
     	else
     	{
-    		prepareNextPosition(true);
+    		//prepareNextPosition(true);
     	}
     }
     

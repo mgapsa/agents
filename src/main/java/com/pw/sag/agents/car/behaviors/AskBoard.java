@@ -44,6 +44,7 @@ public class AskBoard extends Behaviour {
         east = 1;
         west = 1;
         carsNames = new ArrayList<String>();
+        carsReceived = new ArrayList<Boolean>();
         
     }
 
@@ -141,7 +142,7 @@ public class AskBoard extends Behaviour {
                 	carsNames = carsNamesLocal;
                 	for (String carName : carsNames)
                 	{
-                		if (carName != agentName)
+                		if (!carName.equals(agentName))
                 			agent.send(inform().toLocal(carName).withContent(Messages.FROM_CAR + ";" + Messages.ASK_FOR_BLOKED_LOCATIONS + ";" + agentName).build());
                 	}
                 	break;
