@@ -17,6 +17,8 @@ public class CarAgent extends Agent {
     private int nextX;
     private int nextY;
     
+    private String agentName;
+
     private int direction;
     private int previousDirection;
     private int[][] rewardsArray;
@@ -32,13 +34,16 @@ public class CarAgent extends Agent {
         final String boardName = (String) this.getArguments()[0];
         addBehaviour(new AskBoard(this, boardName));
         
+        String[] parts = this.getName().split("@");
+        agentName = parts[0];
+
         generator = new Random();
         rewardsArray = new int[4][3];
         for (int i = 0; i < rewardsArray.length; i++)
     	{
         	for (int j = 0; j < rewardsArray[i].length; j++)
         	{
-        		rewardsArray[i][j] = 100;
+        		rewardsArray[i][j] = 2000;
         	}
         }
         inaccessibleDirections = new Boolean[3];
@@ -60,7 +65,26 @@ public class CarAgent extends Agent {
         nextY = currentY;
         direction = generator.nextInt(4);
         previousDirection = direction;
-        prepareNextPosition(false);
+    	switch (direction)
+    	{
+    	case 0:
+    		nextX = currentX + 1;
+    		nextY = currentY;
+    		break;
+    	case 1:
+    		nextY = currentY - 1; // jesli poczatek ukladu wspolrzednych jest w lewym gornym roku
+    		nextX = currentX;
+    		break;
+    	case 2:
+    		nextX = currentX - 1;
+    		nextY = currentY;
+    		break;
+    	case 3:
+    		nextY = currentY + 1;
+    		nextX = currentX;
+    		break;
+    	}
+
         //CHYBA dobra strona do ogarniecia podstaw JADE i agentów
         //http://ideaheap.com/2015/05/jade-setup-for-beginners/
         //mvn -Pjade-main exec:java
@@ -171,6 +195,9 @@ public class CarAgent extends Agent {
     	{
     		lastChangeDirection = 0;
     		previousDirection = direction;
+    		inaccessibleDirections[0] = false;
+    		inaccessibleDirections[1] = false;
+    		inaccessibleDirections[2] = false;
     		switch (direction)
     		{
     		case 0:
@@ -231,11 +258,11 @@ public class CarAgent extends Agent {
 					if (direction > 3)
 						direction = 0;
 				}
-				else if (randomInt < left + forward)
+				else if (randomInt >= left && randomInt < left + forward)
 				{
 					// nie rób nic
 				}
-				else if (randomInt < left + forward + right)
+				else if (randomInt >= left + forward && randomInt < left + forward + right)
 				{
 					direction--;
 					if (direction < 0)
@@ -264,69 +291,69 @@ public class CarAgent extends Agent {
     	}
     }
     
-    private void prepareNextPosition(boolean forceChangeDirection)
-    {
-//    	nextX = generator.nextInt(80);
-//    	nextY = generator.nextInt(80);
-    	if (!forceChangeDirection)
-    	{
-    		lastChangeDirection = 0;
-        	boolean changeDirection = generator.nextInt(100) % 10 == 0;
-        	if (changeDirection)
-        	{
-        		int changeValue = generator.nextInt(2) == 0 ? 1 : -1;
-        		direction += changeValue;
-        		if (direction > 3)
-        			direction = 0;
-        		else if (direction < 0)
-        			direction = 3;
-        	}
-    	}
-    	else
-    	{
-    		if (lastChangeDirection == 0)
-    		{
-        		int changeValue = generator.nextInt(2) == 0 ? 1 : -1;
-        		direction += changeValue;
-        		lastChangeDirection = changeValue;
-        		if (direction > 3)
-        			direction = 0;
-        		else if (direction < 0)
-        			direction = 3;
-    		}
-    		else
-    		{
-        		direction += lastChangeDirection;
-        		if (direction > 3)
-        			direction = 0;
-        		else if (direction < 0)
-        			direction = 3;
-
-    		}
-    	}
-    	switch (direction)
-    	{
-    	case 0:
-    		nextX = currentX + 1;
-    		nextY = currentY;
-    		break;
-    	case 1:
-    		nextY = currentY - 1; // jesli poczatek ukladu wspolrzednych jest w lewym gornym roku
-    		nextX = currentX;
-    		break;
-    	case 2:
-    		nextX = currentX - 1;
-    		nextY = currentY;
-    		break;
-    	case 3:
-    		nextY = currentY + 1;
-    		nextX = currentX;
-    		break;
-//    	default:
-//    		nextX = 10 + generator.nextInt(80);
-//    		nextY = 10 + generator.nextInt(80);
-    	}
-    }
+//    private void prepareNextPosition(boolean forceChangeDirection)
+//    {
+////    	nextX = generator.nextInt(80);
+////    	nextY = generator.nextInt(80);
+//    	if (!forceChangeDirection)
+//    	{
+//    		lastChangeDirection = 0;
+//        	boolean changeDirection = generator.nextInt(100) % 10 == 0;
+//        	if (changeDirection)
+//        	{
+//        		int changeValue = generator.nextInt(2) == 0 ? 1 : -1;
+//        		direction += changeValue;
+//        		if (direction > 3)
+//        			direction = 0;
+//        		else if (direction < 0)
+//        			direction = 3;
+//        	}
+//    	}
+//    	else
+//    	{
+//    		if (lastChangeDirection == 0)
+//    		{
+//        		int changeValue = generator.nextInt(2) == 0 ? 1 : -1;
+//        		direction += changeValue;
+//        		lastChangeDirection = changeValue;
+//        		if (direction > 3)
+//        			direction = 0;
+//        		else if (direction < 0)
+//        			direction = 3;
+//    		}
+//    		else
+//    		{
+//        		direction += lastChangeDirection;
+//        		if (direction > 3)
+//        			direction = 0;
+//        		else if (direction < 0)
+//        			direction = 3;
+//
+//    		}
+//    	}
+//    	switch (direction)
+//    	{
+//    	case 0:
+//    		nextX = currentX + 1;
+//    		nextY = currentY;
+//    		break;
+//    	case 1:
+//    		nextY = currentY - 1; // jesli poczatek ukladu wspolrzednych jest w lewym gornym roku
+//    		nextX = currentX;
+//    		break;
+//    	case 2:
+//    		nextX = currentX - 1;
+//    		nextY = currentY;
+//    		break;
+//    	case 3:
+//    		nextY = currentY + 1;
+//    		nextX = currentX;
+//    		break;
+////    	default:
+////    		nextX = 10 + generator.nextInt(80);
+////    		nextY = 10 + generator.nextInt(80);
+//    	}
+//    }
  
     @Override
     public void takeDown() {

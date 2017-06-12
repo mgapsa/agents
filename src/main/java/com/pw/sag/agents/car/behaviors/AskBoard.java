@@ -75,12 +75,6 @@ public class AskBoard extends Behaviour {
         listen(agent, this).forString((information) -> {
             logger.info("Recieved " + information);
             CarAgent car = (CarAgent) agent;
-            try {
-				Thread.sleep(300);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
             
             String[] parts = information.split(";");
             
@@ -102,6 +96,14 @@ public class AskBoard extends Behaviour {
                 			//idzie pytanie o sąsiedztwo do planszy
                 			int reward = Integer.parseInt(parts[3]);
                 			car.claimReward(reward);
+                			
+				            try {
+								Thread.sleep(100);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
                 			agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY()).build());
                 			break;
                 		case Messages.OBSTACLE_MET:
