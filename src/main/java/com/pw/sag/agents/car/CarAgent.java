@@ -20,7 +20,7 @@ public class CarAgent extends Agent {
     public static final int RIGHT = 2;
     private int currentX;
     private int currentY;
-    private int steps=0;
+    private int steps = 0;
 
     private int nextX;
     private int nextY;
@@ -81,37 +81,42 @@ public class CarAgent extends Agent {
 
     public void chooseNextPosition() {
 		double tempValue = 0;
+		boolean flag = false;
 		if (rewardsArray[direction][FORWARD] > tempValue  && !inaccessibleDirections[direction]) {
 			tempValue = rewardsArray[direction][FORWARD];
-			nextSide =FORWARD;
+			nextSide = FORWARD;
 			nextDirection = direction;
+			flag = true;
 		}
-		if (rewardsArray[(direction+3)%4][LEFT] > tempValue && !inaccessibleDirections[(direction+3)%4]) {
-			tempValue = rewardsArray[(direction+3)%4][LEFT];
+		if (rewardsArray[direction][LEFT] > tempValue && !inaccessibleDirections[(direction+3)%4]) {
+			tempValue = rewardsArray[direction][LEFT];
 			nextSide = LEFT;
 			nextDirection = (direction+3)%4;
+			flag = true;
 		}
-		if (rewardsArray[(direction+5)%4][RIGHT] > tempValue && !inaccessibleDirections[(direction+5)%4]) {
+		if (rewardsArray[direction][RIGHT] > tempValue && !inaccessibleDirections[(direction+5)%4]) {
 			nextSide = RIGHT;
 			nextDirection = (direction+5)%4;
+			flag = true;
 		}
+
 
 		switch (nextDirection){
 			case NORTH:
-				nextX = currentX;
-				nextY = currentY-1;
-				break;
-			case EAST:
-				nextX = currentX+1;
-				nextY = currentY;
-				break;
-			case WEST:
 				nextX = currentX-1;
 				nextY = currentY;
 				break;
-			case SOUTH:
+			case EAST:
 				nextX = currentX;
-				nextY = currentY +1;
+				nextY = currentY+1;
+				break;
+			case WEST:
+				nextX = currentX;
+				nextY = currentY-1;
+				break;
+			case SOUTH:
+				nextX = currentX+1;
+				nextY = currentY;
 				break;
 			default:
 				break;
@@ -152,7 +157,7 @@ public class CarAgent extends Agent {
     	{
     		currentX = nextX;
     		currentY = nextY;
-    		direction = nextDirection;
+
     		movedSide = nextSide;
     		steps++;
 			for (int i = 0; i < inaccessibleDirections.length; i++)
@@ -168,11 +173,34 @@ public class CarAgent extends Agent {
     }
 
     public void setReward(double reward){
-		if(rewardsArray[direction][movedSide]==1){
-			rewardsArray[direction][movedSide]=0;
+		double oldReward = 0;
+		if(rewardsArray[direction][movedSide]==1.0){
+			rewardsArray[direction][movedSide]= 0.0;
+			rewardsArray[direction][movedSide] = (rewardsArray[direction][movedSide] + reward);
+			oldReward = 0;
 		}
-		rewardsArray[direction][movedSide] = rewardsArray[direction][movedSide] + Math.pow(0.9,steps)*reward;
-		logger.info(Double.toString(rewardsArray[direction][movedSide]));
+		else
+		{
+			oldReward = rewardsArray[direction][movedSide];
+			//rewardsArray[direction][movedSide] = (rewardsArray[direction][movedSide] + Math.pow(0.9,steps)* reward)/2;
+			rewardsArray[direction][movedSide] = (rewardsArray[direction][movedSide] +  reward)/2;
+		}
+		if(agentName.equals("car-agent-1"))
+		{
+			logger.info("Kierunek " + direction + " poszedłem " + movedSide);
+			logger.info("Nagroda " + reward);
+			logger.info("Stara nagroda tutej " + oldReward);
+		}
+
+//		rewardsArray[direction][movedSide] = (rewardsArray[direction][movedSide] + Math.pow(0.9,steps)*reward)/2;
+		direction = nextDirection;
+		if(agentName.equals("car-agent-1")) {
+			logger.info(currentX + " " + currentY);
+			for (int i = 0; i < 4; i++) {
+				logger.info(Double.toString(rewardsArray[i][0]) + " " + Double.toString(rewardsArray[i][1]) + " " + Double.toString(rewardsArray[i][2]));
+			}
+		}
+
 	}
     
 
