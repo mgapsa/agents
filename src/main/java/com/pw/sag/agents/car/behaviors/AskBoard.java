@@ -73,7 +73,7 @@ public class AskBoard extends Behaviour {
 
     private void continueAsking() {
         listen(agent, this).forString((information) -> {
-            logger.info("Recieved " + information);
+            //logger.info("Recieved " + information);
             CarAgent car = (CarAgent) agent;
             
             String[] parts = information.split(";");
@@ -97,7 +97,7 @@ public class AskBoard extends Behaviour {
                 			double reward = Double.parseDouble(parts[3]);
                 			car.setReward(reward);
 				            try {
-								Thread.sleep(100);
+								Thread.sleep(500);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -120,10 +120,10 @@ public class AskBoard extends Behaviour {
                 case Messages.ASK_AOBUT_NEIGHBOURHOOD:
                 	//tutaj co robicie gdy dostaniecie odpowiedz o sasiedztwie
                 	//0 to normalne pole, 1 to przeszkoda
-                	west = Integer.parseInt(parts[2]);
-                	south = Integer.parseInt(parts[3]);
-                	east = Integer.parseInt(parts[4]);
-                	north = Integer.parseInt(parts[5]);
+                	north = Integer.parseInt(parts[2]);
+                	east = Integer.parseInt(parts[3]);
+                	south = Integer.parseInt(parts[4]);
+                	west = Integer.parseInt(parts[5]);
                 	//jakies przetwarzanie i na koniec idzie pytanie o ruch do samochodu. 
                 	//YOURCODE HERE xD
 					if (west==1){
@@ -138,7 +138,7 @@ public class AskBoard extends Behaviour {
 					if (north == 1){
 						car.setInaccessibleDirections(CarAgent.NORTH);
 					}
-
+//					car.chooseNextPosition();
                 	agent.send(inform().toLocal(boardName).withContent(Messages.ASK_FOR_ALL_CARS + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 	
                 	//car.moved(true);
@@ -231,7 +231,7 @@ public class AskBoard extends Behaviour {
     // to sie teraz nie odpala BO on tu nasluchuje, nic nie dostaje wiec nie niszczy i reszta sie moze dokrecic
     private void stopAsking() {
         listen(agent, this).forString((information) -> {
-            logger.info("I'm just going to ignore this: " + information);
+            //logger.info("I'm just going to ignore this: " + information);
             ContainerKiller.killContainerOf(agent);
         });
     }

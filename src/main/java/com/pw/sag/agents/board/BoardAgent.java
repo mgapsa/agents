@@ -63,6 +63,13 @@ public class BoardAgent extends Agent {
     		int n = ThreadLocalRandom.current().nextInt(1, y-1);
     		board[m][n] = 1;
     	}
+		for( int i = 1; i < 4; i++)
+		{
+			for(int j = 1; j < 4; j++)
+			{
+				board[i][j] = 0;
+			}
+		}
 		board[1][1]= 2;
 	}
     

@@ -57,7 +57,7 @@ public class RespondToCar extends Behaviour {
     //Sprawdzac obstacles, CEL? Zając sie GUI
     private void continueResponding() {
         listen(agent, this).forString((information) -> {
-            logger.info("Recieved " + information);
+            //logger.info("Recieved " + information);
             //common variables
             String[] parts = information.split(";");
             int x = Integer.parseInt(parts[2]);
@@ -97,7 +97,7 @@ public class RespondToCar extends Behaviour {
 
     private void stopResponding() {
         listen(agent, this).forInteger((toIgnore) -> {
-            logger.info("I'm just going to ignore this: " + toIgnore);
+            //logger.info("I'm just going to ignore this: " + toIgnore);
             ContainerKiller.killContainerOf(agent);
         });
     }
