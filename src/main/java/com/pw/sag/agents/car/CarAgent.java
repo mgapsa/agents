@@ -172,6 +172,7 @@ public class CarAgent extends Agent {
 			rewardsArray[direction][movedSide]=0;
 		}
 		rewardsArray[direction][movedSide] = rewardsArray[direction][movedSide] + Math.pow(0.9,steps)*reward;
+		logger.info(Double.toString(rewardsArray[direction][movedSide]));
 	}
     
 
