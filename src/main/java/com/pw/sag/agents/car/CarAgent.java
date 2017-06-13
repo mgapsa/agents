@@ -80,7 +80,7 @@ public class CarAgent extends Agent {
     }
 
     public void chooseNextPosition() {
-		double tempValue = 0;
+		double tempValue = -100;
 		boolean flag = false;
 		if (rewardsArray[direction][FORWARD] > tempValue  && !inaccessibleDirections[direction]) {
 			tempValue = rewardsArray[direction][FORWARD];
@@ -172,6 +172,14 @@ public class CarAgent extends Agent {
     	}
     }
 
+    public void routeFinished()
+	{
+		currentY = 0;
+		currentX = 0;
+		nextX = 0;
+		nextY = 0;
+	}
+
     public void setReward(double reward){
 		double oldReward = 0;
 		if(rewardsArray[direction][movedSide]==1.0){
@@ -190,6 +198,7 @@ public class CarAgent extends Agent {
 			logger.info("Kierunek " + direction + " poszedłem " + movedSide);
 			logger.info("Nagroda " + reward);
 			logger.info("Stara nagroda tutej " + oldReward);
+			logger.info(inaccessibleDirections[NORTH]+" "+inaccessibleDirections[EAST]+" "+inaccessibleDirections[SOUTH]+" "+inaccessibleDirections[WEST]);
 		}
 
 //		rewardsArray[direction][movedSide] = (rewardsArray[direction][movedSide] + Math.pow(0.9,steps)*reward)/2;

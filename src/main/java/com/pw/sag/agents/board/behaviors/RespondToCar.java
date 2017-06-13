@@ -94,8 +94,16 @@ public class RespondToCar extends Behaviour {
                         map.put(parts[1], reward);
                     }
                     reward = reward - oldReward;
-                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK + ";" + reward).build());
-                	gui.displayCar(parts[1], x, y);
+                    if(x == 1 && y == 1)
+                    {
+                        agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.FINISH + ";" + reward).build());
+                        gui.carFinishedHisRoute(parts[1]);
+                    }
+                    else
+                    {
+                        agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK + ";" + reward).build());
+                        gui.displayCar(parts[1], x, y);
+                    }
                 }
             	break;
             case Messages.ASK_FOR_ALL_CARS:
