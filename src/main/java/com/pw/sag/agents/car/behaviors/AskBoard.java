@@ -181,21 +181,21 @@ public class AskBoard extends Behaviour {
                 	int nextX = Integer.parseInt(parts[5]);
                 	int nextY = Integer.parseInt(parts[6]);
                 	if (curX == car.getCurrentX() - 1 && curY == car.getCurrentY())
-                		west = 1;
+                		north = 1;
                 	else if (curX == car.getCurrentX() && curY == car.getCurrentY() + 1)
-                		south = 1;
+                		east = 1;
                 	else if (curX == car.getCurrentX() + 1 && curY == car.getCurrentY())
-                		east = 1;
-                	else if (curX == car.getCurrentX() && curY == car.getCurrentY() - 1)
-                		north = 1;
-                	if (nextX == car.getCurrentX() - 1 && nextY == car.getCurrentY())
-                		west = 1;
-                	else if (nextX == car.getCurrentX() && nextY == car.getCurrentY() + 1)
                 		south = 1;
+                	else if (curX == car.getCurrentX() && curY == car.getCurrentY() - 1)
+                		west = 1;
+                	if (nextX == car.getCurrentX() - 1 && nextY == car.getCurrentY())
+						north = 1;
+                	else if (nextX == car.getCurrentX() && nextY == car.getCurrentY() + 1)
+						east = 1;
                 	else if (nextX == car.getCurrentX() + 1 && nextY == car.getCurrentY())
-                		east = 1;
+                		south = 1;
                 	else if (nextX == car.getCurrentX() && nextY == car.getCurrentY() - 1)
-                		north = 1;
+                		west = 1;
                 	int carsNotReceivedCounter = 0;
                 	for (Boolean carReceived : carsReceived)
                 	{
