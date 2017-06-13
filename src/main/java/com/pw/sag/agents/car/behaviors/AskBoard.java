@@ -97,7 +97,7 @@ public class AskBoard extends Behaviour {
                 			double reward = Double.parseDouble(parts[3]);
                 			car.setReward(reward);
 				            try {
-								Thread.sleep(500);
+								Thread.sleep(100);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

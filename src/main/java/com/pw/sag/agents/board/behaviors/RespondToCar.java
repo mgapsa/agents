@@ -3,6 +3,7 @@ package com.pw.sag.agents.board.behaviors;
 import com.pw.sag.agents.board.BoardAgent;
 import com.pw.sag.gui.BoardGUI;
 import com.pw.sag.tools.ContainerKiller;
+import com.pw.sag.utilities.Point;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import org.slf4j.Logger;
@@ -12,7 +13,9 @@ import static com.pw.sag.messages.MessageBuilder.inform;
 import static com.pw.sag.messages.MessageReceiver.listen;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.pw.sag.messages.Messages;
 
@@ -21,6 +24,7 @@ import com.pw.sag.messages.Messages;
 public class RespondToCar extends Behaviour {
     private static final Logger logger = LoggerFactory.getLogger(RespondToCar.class);
     private static final int MAX_INCREMENT = 10;
+    private Map<String, Double> map = new HashMap<String, Double>();
 
     private enum State {
         CONTINUE_RESPONDING, STOP_RESPONDING
@@ -78,7 +82,18 @@ public class RespondToCar extends Behaviour {
 //                	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.OBSTACLE_MET).build());
 //                else
                 {
-                	float reward = boardAgent.getWeights()[x][y];
+                	double reward = boardAgent.getWeights()[x][y];
+                	double oldReward = 0;
+                    if(map.containsKey(parts[1]))
+                    {
+                        oldReward = map.get(parts[1]);
+                        map.replace(parts[1],reward);
+                    }
+                    else
+                    {
+                        map.put(parts[1], reward);
+                    }
+                    reward = reward - oldReward;
                 	agent.send(inform().toLocal(parts[1]).withContent(Messages.FROM_BOARD + ";" + Messages.MOVE_ORDER + ";" + Messages.MOVE_OK + ";" + reward).build());
                 	gui.displayCar(parts[1], x, y);
                 }
