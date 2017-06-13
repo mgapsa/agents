@@ -138,7 +138,7 @@ public class AskBoard extends Behaviour {
 					if (north == 1){
 						car.setInaccessibleDirections(CarAgent.NORTH);
 					}
-					car.chooseNextPosition();
+
                 	agent.send(inform().toLocal(boardName).withContent(Messages.ASK_FOR_ALL_CARS + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 	
                 	//car.moved(true);

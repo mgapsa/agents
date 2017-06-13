@@ -87,7 +87,7 @@ public class CarAgent extends Agent {
 			nextDirection = direction;
 		}
 		if (rewardsArray[(direction+3)%4][LEFT] > tempValue && !inaccessibleDirections[(direction+3)%4]) {
-			tempValue = rewardsArray[direction][LEFT];
+			tempValue = rewardsArray[(direction+3)%4][LEFT];
 			nextSide = LEFT;
 			nextDirection = (direction+3)%4;
 		}
@@ -102,11 +102,11 @@ public class CarAgent extends Agent {
 				nextY = currentY-1;
 				break;
 			case EAST:
-				nextX = currentX-1;
+				nextX = currentX+1;
 				nextY = currentY;
 				break;
 			case WEST:
-				nextX = currentX+1;
+				nextX = currentX-1;
 				nextY = currentY;
 				break;
 			case SOUTH:
