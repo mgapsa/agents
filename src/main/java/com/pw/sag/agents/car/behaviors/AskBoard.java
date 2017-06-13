@@ -94,9 +94,8 @@ public class AskBoard extends Behaviour {
                 			//car.moved(true);
                 			//ruch się udał, wiec mamy nagrode
                 			//idzie pytanie o sąsiedztwo do planszy
-                			int reward = Integer.parseInt(parts[3]);
-                			car.claimReward(reward);
-                			
+                			double reward = Double.parseDouble(parts[3]);
+                			car.setReward(reward);
 				            try {
 								Thread.sleep(100);
 							} catch (Exception e) {
@@ -106,14 +105,14 @@ public class AskBoard extends Behaviour {
 
                 			agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY()).build());
                 			break;
-                		case Messages.OBSTACLE_MET:
+                		/*case Messages.OBSTACLE_MET:
                 			//ten przypadek juz nie wsytąpi teraz, jak zrobicie algorytm poruszania
                 			car.moved(false);
                 			agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 			break;
                 		case Messages.FINISH:
                 			state = State.STOP_MOVING;
-                			break;
+                			break;*/
             			default:
             				break;            		
                 	}
@@ -127,6 +126,19 @@ public class AskBoard extends Behaviour {
                 	north = Integer.parseInt(parts[5]);
                 	//jakies przetwarzanie i na koniec idzie pytanie o ruch do samochodu. 
                 	//YOURCODE HERE xD
+					if (west==1){
+						car.setInaccessibleDirections(CarAgent.WEST);
+					}
+					if (south==1){
+						car.setInaccessibleDirections(CarAgent.SOUTH);
+					}
+					if (east == 1){
+						car.setInaccessibleDirections(CarAgent.EAST);
+					}
+					if (north == 1){
+						car.setInaccessibleDirections(CarAgent.NORTH);
+					}
+					car.chooseNextPosition();
                 	agent.send(inform().toLocal(boardName).withContent(Messages.ASK_FOR_ALL_CARS + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 	
                 	//car.moved(true);
@@ -192,7 +204,20 @@ public class AskBoard extends Behaviour {
                 	}
                 	if (carsNotReceivedCounter <= 1)
                 	{
-                		car.prepareNextPosition2(north, east, south, west, false);
+//                		car.prepareNextPosition2(north, east, south, west, false);
+						if (west==1){
+							car.setInaccessibleDirections(CarAgent.WEST);
+						}
+						if (south==1){
+							car.setInaccessibleDirections(CarAgent.SOUTH);
+						}
+						if (east == 1){
+							car.setInaccessibleDirections(CarAgent.EAST);
+						}
+						if (north == 1){
+							car.setInaccessibleDirections(CarAgent.NORTH);
+						}
+						car.chooseNextPosition();
                 		car.moved(true);
                     	agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 	}

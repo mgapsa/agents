@@ -11,21 +11,29 @@ import jade.core.Agent;
 
 public class CarAgent extends Agent {
     private static final Logger logger = LoggerFactory.getLogger(CarAgent.class);
+    public static final int NORTH = 0;
+    public static final int EAST = 1;
+    public static final int SOUTH = 2;
+    public static final int WEST = 3;
+    public static final int FORWARD = 0;
+    public static final int LEFT = 1;
+    public static final int RIGHT = 2;
     private int currentX;
     private int currentY;
-    
+    private int steps=0;
+
     private int nextX;
     private int nextY;
-    
+
     private String agentName;
 
     private int direction;
-    private int previousDirection;
-    private int[][] rewardsArray;
-    // rewardsArray[E, N, W, S][L, F, R]
+    private int nextDirection;
+    private int movedSide;
+	private int nextSide;
+	private double[][] rewardsArray;
     private Boolean[] inaccessibleDirections;
 //    private int[][] inaccessibleCellsArray;
-    private int lastChangeDirection;
     private Random generator;
     
  
@@ -38,15 +46,15 @@ public class CarAgent extends Agent {
         agentName = parts[0];
 
         generator = new Random();
-        rewardsArray = new int[4][3];
+        rewardsArray = new double[4][3];
         for (int i = 0; i < rewardsArray.length; i++)
     	{
         	for (int j = 0; j < rewardsArray[i].length; j++)
         	{
-        		rewardsArray[i][j] = 2000;
+        		rewardsArray[i][j] = 1;
         	}
         }
-        inaccessibleDirections = new Boolean[3];
+        inaccessibleDirections = new Boolean[4];
         for (int i = 0; i < inaccessibleDirections.length; i++)
         {
         	inaccessibleDirections[i] = false;
@@ -61,36 +69,63 @@ public class CarAgent extends Agent {
 //        }
         currentX = 25 + generator.nextInt(50);
         currentY = 30 + generator.nextInt(90);
-        nextX = currentX;
-        nextY = currentY;
         direction = generator.nextInt(4);
-        previousDirection = direction;
-    	switch (direction)
-    	{
-    	case 0:
-    		nextX = currentX + 1;
-    		nextY = currentY;
-    		break;
-    	case 1:
-    		nextY = currentY - 1; // jesli poczatek ukladu wspolrzednych jest w lewym gornym roku
-    		nextX = currentX;
-    		break;
-    	case 2:
-    		nextX = currentX - 1;
-    		nextY = currentY;
-    		break;
-    	case 3:
-    		nextY = currentY + 1;
-    		nextX = currentX;
-    		break;
-    	}
+        chooseNextPosition();
+
 
         //CHYBA dobra strona do ogarniecia podstaw JADE i agentów
         //http://ideaheap.com/2015/05/jade-setup-for-beginners/
         //mvn -Pjade-main exec:java
         //mvn -Pjade-board exec:java
     }
-    
+
+    public void chooseNextPosition() {
+		double tempValue = 0;
+		if (rewardsArray[direction][FORWARD] > tempValue  && !inaccessibleDirections[direction]) {
+			tempValue = rewardsArray[direction][FORWARD];
+			nextSide =FORWARD;
+			nextDirection = direction;
+		}
+		if (rewardsArray[(direction+3)%4][LEFT] > tempValue && !inaccessibleDirections[(direction+3)%4]) {
+			tempValue = rewardsArray[direction][LEFT];
+			nextSide = LEFT;
+			nextDirection = (direction+3)%4;
+		}
+		if (rewardsArray[(direction+5)%4][RIGHT] > tempValue && !inaccessibleDirections[(direction+5)%4]) {
+			nextSide = RIGHT;
+			nextDirection = (direction+5)%4;
+		}
+
+		switch (nextDirection){
+			case NORTH:
+				nextX = currentX;
+				nextY = currentY-1;
+				break;
+			case EAST:
+				nextX = currentX-1;
+				nextY = currentY;
+				break;
+			case WEST:
+				nextX = currentX+1;
+				nextY = currentY;
+				break;
+			case SOUTH:
+				nextX = currentX;
+				nextY = currentY +1;
+				break;
+			default:
+				break;
+		}
+	}
+
+
+	public void setInaccessibleDirections(int ... positions){
+		for (int p :positions)
+		{
+			inaccessibleDirections[p] = true;
+		}
+	}
+
     public int getCurrentX()
     {
     	return currentX;
@@ -117,6 +152,13 @@ public class CarAgent extends Agent {
     	{
     		currentX = nextX;
     		currentY = nextY;
+    		direction = nextDirection;
+    		movedSide = nextSide;
+    		steps++;
+			for (int i = 0; i < inaccessibleDirections.length; i++)
+			{
+				inaccessibleDirections[i] = false;
+			}
     		//prepareNextPosition(false);
     	}
     	else
@@ -124,172 +166,15 @@ public class CarAgent extends Agent {
     		//prepareNextPosition(true);
     	}
     }
+
+    public void setReward(double reward){
+		if(rewardsArray[direction][movedSide]==1){
+			rewardsArray[direction][movedSide]=0;
+		}
+		rewardsArray[direction][movedSide] = rewardsArray[direction][movedSide] + Math.pow(0.9,steps)*reward;
+	}
     
-    public void claimReward(int reward)
-    {
-    	switch (direction)
-    	{
-    	case 0:
-    		switch (previousDirection)
-    		{
-    		case 0:
-    			rewardsArray[previousDirection][1] += reward;
-    			break;
-    		case 1:
-    			rewardsArray[previousDirection][2] += reward;
-    			break;
-    		case 3:
-    			rewardsArray[previousDirection][0] += reward;
-    			break;
-    		}
-    		break;
-    	case 1:
-    		switch (previousDirection)
-    		{
-    		case 0:
-    			rewardsArray[previousDirection][0] += reward;
-    			break;
-    		case 1:
-    			rewardsArray[previousDirection][1] += reward;
-    			break;
-    		case 2:
-    			rewardsArray[previousDirection][2] += reward;
-    			break;
-    		}
-    		break;
-    	case 2:
-    		switch (previousDirection)
-    		{
-    		case 1:
-    			rewardsArray[previousDirection][0] += reward;
-    			break;
-    		case 2:
-    			rewardsArray[previousDirection][1] += reward;
-    			break;
-    		case 3:
-    			rewardsArray[previousDirection][2] += reward;
-    			break;
-    		}
-    		break;
-    	case 3:
-    		switch (previousDirection)
-    		{
-    		case 0:
-    			rewardsArray[previousDirection][2] += reward;
-    			break;
-    		case 2:
-    			rewardsArray[previousDirection][0] += reward;
-    			break;
-    		case 3:
-    			rewardsArray[previousDirection][1] += reward;
-    			break;
-    		}
-    		break;
-    	}
-    }
-    
-    public void prepareNextPosition2(int north, int east, int south, int west,
-    		boolean forceChangeDirection)
-    {
-    	if (!forceChangeDirection)
-    	{
-    		lastChangeDirection = 0;
-    		previousDirection = direction;
-    		inaccessibleDirections[0] = false;
-    		inaccessibleDirections[1] = false;
-    		inaccessibleDirections[2] = false;
-    		switch (direction)
-    		{
-    		case 0:
-    			if (north == 1)
-    				inaccessibleDirections[0] = true;
-    			if (east == 1)
-    				inaccessibleDirections[1] = true;
-    			if (south == 1)
-    				inaccessibleDirections[2] = true;
-    			break;
-    		case 1:
-    			if (west == 1)
-    				inaccessibleDirections[0] = true;
-    			if (north == 1)
-    				inaccessibleDirections[1] = true;
-    			if (east == 1)
-    				inaccessibleDirections[2] = true;
-    			break;
-    		case 2:
-    			if (south == 1)
-    				inaccessibleDirections[0] = true;
-    			if (west == 1)
-    				inaccessibleDirections[1] = true;
-    			if (north == 1)
-    				inaccessibleDirections[2] = true;
-    			break;
-    		case 3:
-    			if (east == 1)
-    				inaccessibleDirections[0] = true;
-    			if (south == 1)
-    				inaccessibleDirections[1] = true;
-    			if (west == 1)
-    				inaccessibleDirections[2] = true;
-    			break;
-    		}
-			int left = rewardsArray[direction][0];
-			int forward = rewardsArray[direction][1];
-			int right = rewardsArray[direction][2];
-			if (inaccessibleDirections[0] && inaccessibleDirections[1] && inaccessibleDirections[2])
-			{
-				if (direction < 2)
-					direction += 2;
-				if (direction > 1)
-					direction -= 2;
-			}
-			else
-			{
-				int randomInt = generator.nextInt(left + forward + right);
-				while (randomInt >= 0 && randomInt <= left - 1 && inaccessibleDirections[0] ||
-						randomInt >= left && randomInt <= left + forward - 1 && inaccessibleDirections[1] ||
-						randomInt >= left + forward && randomInt <= left + forward + right - 1 && inaccessibleDirections[2])
-				{
-					randomInt = generator.nextInt(left + forward + right);
-				}
-				if (randomInt < left)
-				{
-					direction++;
-					if (direction > 3)
-						direction = 0;
-				}
-				else if (randomInt >= left && randomInt < left + forward)
-				{
-					// nie rób nic
-				}
-				else if (randomInt >= left + forward && randomInt < left + forward + right)
-				{
-					direction--;
-					if (direction < 0)
-						direction = 3;
-				}
-			}
-	    	switch (direction)
-	    	{
-	    	case 0:
-	    		nextX = currentX + 1;
-	    		nextY = currentY;
-	    		break;
-	    	case 1:
-	    		nextY = currentY - 1; // jesli poczatek ukladu wspolrzednych jest w lewym gornym roku
-	    		nextX = currentX;
-	    		break;
-	    	case 2:
-	    		nextX = currentX - 1;
-	    		nextY = currentY;
-	    		break;
-	    	case 3:
-	    		nextY = currentY + 1;
-	    		nextX = currentX;
-	    		break;
-	    	}
-    	}
-    }
+
     
 //    private void prepareNextPosition(boolean forceChangeDirection)
 //    {

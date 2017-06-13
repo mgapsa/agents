@@ -55,6 +55,7 @@ public class BoardAgent extends Agent {
     		}
     	}
     	weights[1][1]= 2;
+
     	//create obstacles
     	for(int i =0; i< z; i++)
     	{
@@ -62,8 +63,8 @@ public class BoardAgent extends Agent {
     		int n = ThreadLocalRandom.current().nextInt(1, y-1);
     		board[m][n] = 1;
     	}
-    	
-    }
+		board[1][1]= 2;
+	}
     
     public int[][] getBoard()
     {

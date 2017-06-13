@@ -60,6 +60,9 @@ public class BoardGUI {
                 {
                 	panelHolder[i][j].setBackground(Color.RED);
                 }
+                else if (board[i][j]==2){
+					panelHolder[i][j].setBackground(Color.GREEN);
+				}
                 else
                 {
                 	panelHolder[i][j].setBackground(Color.WHITE);
@@ -89,7 +92,7 @@ public class BoardGUI {
 		p.setY(y);
 		
 		panelHolder[x][y].setBackground(Color.BLACK);
-	}
+}
 	//tutaj jakas metoda do otrzymywania nazwy actora i jego nowej pozycji od boardu
 	//musi miec jakąś liste ktory gent to jaki leement zeby usuwac w starym miejscu i rysowac w nowym
 }
