@@ -1,0 +1,1 @@
+mvn -Pjade-main exec:java | script.bat
