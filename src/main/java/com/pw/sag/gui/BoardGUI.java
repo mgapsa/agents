@@ -75,6 +75,16 @@ public class BoardGUI {
 		
 		guiFrame.setVisible(true);
 	}
+
+	public void carFinishedHisRoute(String name)
+	{
+		if(map.containsKey(name))
+		{
+			Point p = map.get(name);
+			panelHolder[p.getX()][p.getY()].setBackground(Color.WHITE);
+		}
+	}
+
 	
 	public void displayCar(String name, int x, int y)
 	{

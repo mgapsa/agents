@@ -97,7 +97,7 @@ public class AskBoard extends Behaviour {
                 			double reward = Double.parseDouble(parts[3]);
                 			car.setReward(reward);
 				            try {
-								Thread.sleep(500);
+								Thread.sleep(100);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -109,10 +109,11 @@ public class AskBoard extends Behaviour {
                 			//ten przypadek juz nie wsytąpi teraz, jak zrobicie algorytm poruszania
                 			car.moved(false);
                 			agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
-                			break;
-                		case Messages.FINISH:
-                			state = State.STOP_MOVING;
                 			break;*/
+                		case Messages.FINISH:
+                			car.routeFinished();
+                			state = State.STOP_MOVING;
+                			break;
             			default:
             				break;            		
                 	}
@@ -179,21 +180,21 @@ public class AskBoard extends Behaviour {
                 	int nextX = Integer.parseInt(parts[5]);
                 	int nextY = Integer.parseInt(parts[6]);
                 	if (curX == car.getCurrentX() - 1 && curY == car.getCurrentY())
-                		west = 1;
+                		north = 1;
                 	else if (curX == car.getCurrentX() && curY == car.getCurrentY() + 1)
-                		south = 1;
+                		east = 1;
                 	else if (curX == car.getCurrentX() + 1 && curY == car.getCurrentY())
-                		east = 1;
-                	else if (curX == car.getCurrentX() && curY == car.getCurrentY() - 1)
-                		north = 1;
-                	if (nextX == car.getCurrentX() - 1 && nextY == car.getCurrentY())
-                		west = 1;
-                	else if (nextX == car.getCurrentX() && nextY == car.getCurrentY() + 1)
                 		south = 1;
+                	else if (curX == car.getCurrentX() && curY == car.getCurrentY() - 1)
+                		west = 1;
+                	if (nextX == car.getCurrentX() - 1 && nextY == car.getCurrentY())
+						north = 1;
+                	else if (nextX == car.getCurrentX() && nextY == car.getCurrentY() + 1)
+						east = 1;
                 	else if (nextX == car.getCurrentX() + 1 && nextY == car.getCurrentY())
-                		east = 1;
+                		south = 1;
                 	else if (nextX == car.getCurrentX() && nextY == car.getCurrentY() - 1)
-                		north = 1;
+                		west = 1;
                 	int carsNotReceivedCounter = 0;
                 	for (Boolean carReceived : carsReceived)
                 	{
@@ -217,9 +218,13 @@ public class AskBoard extends Behaviour {
 						if (north == 1){
 							car.setInaccessibleDirections(CarAgent.NORTH);
 						}
-						car.chooseNextPosition();
-                		car.moved(true);
-                    	agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+						if(car.chooseNextPosition()) {
+							car.moved(true);
+							agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+						}
+						else {
+							agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY()).build());
+						}
                 	}
                 	
                 	break;
@@ -231,8 +236,21 @@ public class AskBoard extends Behaviour {
     // to sie teraz nie odpala BO on tu nasluchuje, nic nie dostaje wiec nie niszczy i reszta sie moze dokrecic
     private void stopAsking() {
         listen(agent, this).forString((information) -> {
-            //logger.info("I'm just going to ignore this: " + information);
-            ContainerKiller.killContainerOf(agent);
+				//logger.info("Recieved " + information);
+				CarAgent car = (CarAgent) agent;
+
+				String[] parts = information.split(";");
+
+				if(parts[0].equals(Messages.FROM_CAR))
+				{
+					switch(parts[1])
+					{
+						case Messages.ASK_FOR_BLOKED_LOCATIONS:
+							agent.send(inform().toLocal(parts[2]).withContent(Messages.FROM_CAR + ";" + Messages.ANSWER_BLOKED_LOCATIONS + ";" + agentName
+									+ ";" + car.getCurrentX() + ";" + car.getCurrentY() + ";" + car.getNextX() + ";" + car.getNextY()).build());
+							break;
+					}
+				}
         });
     }
 
