@@ -1,1 +1,1 @@
-http://192.168.0.105:7778/acc
+http://DESKTOP-38VP6K2.home:7778/acc
