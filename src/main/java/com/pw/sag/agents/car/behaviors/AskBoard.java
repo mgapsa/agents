@@ -111,7 +111,6 @@ public class AskBoard extends Behaviour {
                 			agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
                 			break;*/
                 		case Messages.FINISH:
-                			logger.info("HURa chuj");
                 			car.routeFinished();
                 			state = State.STOP_MOVING;
                 			break;
@@ -219,9 +218,13 @@ public class AskBoard extends Behaviour {
 						if (north == 1){
 							car.setInaccessibleDirections(CarAgent.NORTH);
 						}
-						car.chooseNextPosition();
-                		car.moved(true);
-                    	agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+						if(car.chooseNextPosition()) {
+							car.moved(true);
+							agent.send(inform().toLocal(boardName).withContent(Messages.MOVE_ORDER + ";" + agentName + ";" + car.getNextX() + ";" + car.getNextY()).build());
+						}
+						else {
+							agent.send(inform().toLocal(boardName).withContent(Messages.ASK_AOBUT_NEIGHBOURHOOD + ";" + agentName + ";" + car.getCurrentX() + ";" + car.getCurrentY()).build());
+						}
                 	}
                 	
                 	break;

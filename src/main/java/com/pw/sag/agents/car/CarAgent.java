@@ -79,7 +79,7 @@ public class CarAgent extends Agent {
         //mvn -Pjade-board exec:java
     }
 
-    public void chooseNextPosition() {
+    public boolean chooseNextPosition() {
 		double tempValue = -100;
 		boolean flag = false;
 		if (rewardsArray[direction][FORWARD] > tempValue  && !inaccessibleDirections[direction]) {
@@ -98,6 +98,13 @@ public class CarAgent extends Agent {
 			nextSide = RIGHT;
 			nextDirection = (direction+5)%4;
 			flag = true;
+		}
+		if (!flag){
+			for (int i = 0; i < inaccessibleDirections.length; i++)
+			{
+				inaccessibleDirections[i] = false;
+			}
+			return false;
 		}
 
 
@@ -121,6 +128,7 @@ public class CarAgent extends Agent {
 			default:
 				break;
 		}
+		return true;
 	}
 
 
